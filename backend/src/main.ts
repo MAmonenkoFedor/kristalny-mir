@@ -29,8 +29,10 @@ async function bootstrap() {
   );
 
   const port = Number(process.env.PORT ?? 4000);
-  await app.listen(port);
-  Logger.log(`API запущен на http://localhost:${port}`, 'Bootstrap');
+  // На хостинге (ISPmanager, режим «Порт») панель передаёт хост в INSTANCE_HOST.
+  const host = process.env.INSTANCE_HOST || '0.0.0.0';
+  await app.listen(port, host);
+  Logger.log(`API запущен на http://${host}:${port}`, 'Bootstrap');
 }
 
 bootstrap();
