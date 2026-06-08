@@ -1,0 +1,29 @@
+# Зависимости
+**/node_modules/
+
+# Сборка
+**/dist/
+frontend/.next/
+frontend/out/
+frontend/build/
+**/*.tsbuildinfo
+frontend/next-env.d.ts
+
+# Секреты и окружение
+**/.env
+**/.env.local
+**/.env.*.local
+
+# База данных (SQLite)
+**/*.db
+**/*.db-journal
+backend/prisma/dev.db
+backend/prisma/migrations/dev.db*
+
+# Загрузки пользователей
+backend/uploads/
+
+# Системное
+.DS_Store
+Thumbs.db
+*.log

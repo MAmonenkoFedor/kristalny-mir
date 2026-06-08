@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Дизайн-система «Свежий премиум»
+   Палитра в OKLCH, тонированные нейтрали, акцент — свежая аква.
+   ============================================================ */
+:root {
+  /* Нейтрали, слегка тонированы в холодный (hue ~225) */
+  --bg: oklch(0.985 0.006 220);
+  --surface: oklch(0.998 0.003 220);
+  --surface-2: oklch(0.965 0.008 220);
+  --ink: oklch(0.24 0.025 245);
+  --muted: oklch(0.52 0.018 240);
+  --line: oklch(0.915 0.01 225);
+
+  /* Бренд — свежая аква/бирюза (hue ~196) */
+  --brand: oklch(0.72 0.118 196);
+  --brand-strong: oklch(0.63 0.13 198);
+  --brand-soft: oklch(0.955 0.03 196);
+  --brand-ink: oklch(0.34 0.06 210);
+
+  /* Кривые движения (Impeccable / Emil) */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --radius: 1rem;
+
+  /* Заголовки используют ту же гарнитуру, что и текст (Manrope) */
+  --font-display: var(--font-sans);
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--brand);
+  color: oklch(0.99 0 0);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+p { text-wrap: pretty; }
+
+/* Утилиты-помощники */
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-[1200px] px-5 sm:px-8;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3.5 py-1.5
+           text-xs font-semibold uppercase tracking-[0.12em] text-brand-ink;
+  }
+
+  /* Кнопка-праймари: scale на :active, кастомный easing, мягкое свечение */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3.5
+           text-[0.95rem] font-semibold text-white shadow-glow;
+    transition: transform 160ms var(--ease-out-quart),
+                box-shadow 220ms var(--ease-out-quart),
+                background-color 220ms var(--ease-out-quart);
+  }
+  .btn-primary:hover { background-color: var(--brand-strong); }
+  .btn-primary:active { transform: scale(0.97); }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-line
+           bg-surface px-6 py-3.5 text-[0.95rem] font-semibold text-ink;
+    transition: transform 160ms var(--ease-out-quart),
+                border-color 220ms var(--ease-out-quart),
+                background-color 220ms var(--ease-out-quart);
+  }
+  .btn-ghost:hover { border-color: var(--brand); background-color: var(--brand-soft); }
+  .btn-ghost:active { transform: scale(0.97); }
+
+  .card {
+    @apply rounded-3xl border border-line bg-surface p-7 shadow-soft;
+    transition: transform 320ms var(--ease-out-quart),
+                box-shadow 320ms var(--ease-out-quart),
+                border-color 320ms var(--ease-out-quart);
+  }
+
+  /* Полупрозрачная «стеклянная» поверхность (вместо opacity-модификаторов на CSS-переменных) */
+  .glass {
+    background-color: oklch(0.998 0.003 220 / 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Поля форм */
+  .field {
+    @apply w-full rounded-[0.85rem] border border-line bg-surface px-4 py-3 text-[0.95rem] text-ink;
+    transition: border-color 200ms var(--ease-out-quart), box-shadow 200ms var(--ease-out-quart);
+  }
+  .field::placeholder { color: var(--muted); opacity: 0.7; }
+  .field:focus-visible {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 4px oklch(0.72 0.118 196 / 0.16);
+  }
+}
+
+/* Появление секций при скролле (через IntersectionObserver -> data-reveal) */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s var(--ease-out-quart), transform 0.7s var(--ease-out-quart);
+}
+[data-reveal][data-delay="1"].is-visible { transition-delay: 0.08s; }
+[data-reveal][data-delay="2"].is-visible { transition-delay: 0.16s; }
+[data-reveal][data-delay="3"].is-visible { transition-delay: 0.24s; }
+[data-reveal][data-delay="4"].is-visible { transition-delay: 0.32s; }
+
+/* Доступность: уважение к prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Тонкая сетка-фон для hero */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, oklch(0.5 0.02 220 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0.5 0.02 220 / 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 75%);
+}

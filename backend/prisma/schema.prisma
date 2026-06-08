@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Заявка с формы на сайте
+model Lead {
+  id        String     @id @default(cuid())
+  name      String
+  phone     String
+  service   String?
+  comment   String?
+  status    LeadStatus @default(NEW)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+enum LeadStatus {
+  NEW
+  IN_PROGRESS
+  DONE
+  REJECTED
+}
+
+/// Администратор админ-панели
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+/// Универсальное хранилище настроек (site = JSON всего сайта: шапка/футер/hero/контакты)
+model Setting {
+  key  String @id
+  json String
+}
+
+/// Услуга
+model Service {
+  id        String   @id @default(cuid())
+  order     Int      @default(0)
+  icon      String   @default("cleaning")
+  title     String
+  summary   String
+  long      String
+  price     String
+  features  String   @default("[]") // JSON-массив строк
+  createdAt DateTime @default(now())
+}
+
+/// Карточка галереи
+model GalleryItem {
+  id       String  @id @default(cuid())
+  order    Int     @default(0)
+  title    String
+  meta     String
+  category String  @default("Клининг")
+  imageUrl String?
+  grad     String?
+  wide     Boolean @default(false)
+}
+
+/// Статья блога
+model Post {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String
+  category    String   @default("Клининг")
+  date        String
+  readMinutes Int      @default(4)
+  coverUrl    String?
+  grad        String?
+  body        String   @default("[]") // JSON-массив блоков {heading?, text}
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
