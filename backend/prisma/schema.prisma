@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -13,7 +13,7 @@ model Lead {
   name      String
   phone     String
   service   String?
-  comment   String?
+  comment   String?    @db.Text
   status    LeadStatus @default(NEW)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -37,7 +37,7 @@ model User {
 /// Универсальное хранилище настроек (site = JSON всего сайта: шапка/футер/hero/контакты)
 model Setting {
   key  String @id
-  json String
+  json String @db.Text
 }
 
 /// Услуга
@@ -46,10 +46,10 @@ model Service {
   order     Int      @default(0)
   icon      String   @default("cleaning")
   title     String
-  summary   String
-  long      String
+  summary   String   @db.Text
+  long      String   @db.Text
   price     String
-  features  String   @default("[]") // JSON-массив строк
+  features  String   @db.Text // JSON-массив строк (всегда задаётся приложением)
   createdAt DateTime @default(now())
 }
 
@@ -60,8 +60,8 @@ model GalleryItem {
   title    String
   meta     String
   category String  @default("Клининг")
-  imageUrl String?
-  grad     String?
+  imageUrl String? @db.Text
+  grad     String? @db.Text
   wide     Boolean @default(false)
 }
 
@@ -70,13 +70,13 @@ model Post {
   id          String   @id @default(cuid())
   slug        String   @unique
   title       String
-  excerpt     String
+  excerpt     String   @db.Text
   category    String   @default("Клининг")
   date        String
   readMinutes Int      @default(4)
-  coverUrl    String?
-  grad        String?
-  body        String   @default("[]") // JSON-массив блоков {heading?, text}
+  coverUrl    String?  @db.Text
+  grad        String?  @db.Text
+  body        String   @db.Text // JSON-массив блоков {heading?, text} (всегда задаётся приложением)
   published   Boolean  @default(true)
   createdAt   DateTime @default(now())
 }
